@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 //Importation du module Express
 const express = require('express');
 const app = express();
+const expressLimit = require('express-rate-limit');
 
 //Importation de Helmet pour protection OWASP
 const helmet = require('helmet');
@@ -29,12 +30,29 @@ app.use((req, res, next) => {
     next();
   });
 
+//limiter le nombre de connexions possibles
+const limitExpress = expressLimit({
+  //30 min
+  windowMs: 30 * 60 * 1000,
+  //Nombre max de requetes
+  max: 20
+});
+app.use(limitExpress);
+
+//limite le nombre de connexion par IP
+const createAccountLimiter = expressLimit({
+  //15 min
+  windowMs: 15 * 60 * 1000,
+  //Nombre max de requete dans le temps au dessus
+  max: 5
+});
+
 app.use(express.json());
 
 //Rends le fichier images statiques
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/api/auth', userRoutes);
+app.use('/api/auth', createAccountLimiter, userRoutes);
 app.use('/api/sauces', sauceRoutes);
 
 module.exports = app ;
