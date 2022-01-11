@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 //Importation du module unique-validator pour valider que l'adresse email est bien unique
 const uniqueValidator = require('mongoose-unique-validator');
 
-//Création du schéma User pour la DB
+//Création du schéma User pour la BD
 const userSchema = mongoose.Schema ({
     email : {type: String, required: true, unique: true },
     password : {type: String, required : true}

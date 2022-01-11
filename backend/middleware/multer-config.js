@@ -1,23 +1,23 @@
 const multer = require("multer");
-/******************** management of files entering HTTP requests******************/
+//Permet de remplacer les .XXX des fichiers
 const MIME_TYPES = {
   "image/jpg": "jpg",
   "image/jpeg": "jpg",
   "image/png": "png",
 };
-/*********diskStorage() configure path and filename for incoming files.************/
+
+//On crée le fichier de stockage et la destination
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, 'images');
   },
-  /*replace spaces with underscores and add a timestamp {date} as the original name*/
+  //On remplace les " " par des "_" et on rajoute la datedujour pour avoir un nom unique
   filename: (req, file, callback) => {
   const name = file.originalname.split(' ').join('_');
   const extension = MIME_TYPES[file.mimetype];
-  /* Rename the file to its original name + date + extension */
+  //On renomme le fichier d'origine
   callback(null, name + Date.now() + '.' + extension);
 }
 });
-//single()creates a middleware which captures files of a certain type (passed as an argument),
-//logs to server file system using configured storage
+
 module.exports = multer({ storage }).single("image");

@@ -8,7 +8,7 @@ const multer = require('../middleware/multer-config');
 const saucesControllers = require('../controllers/sauces');
 
 
-
+//Création des routes vers l'API
 router.get('/', auth, saucesControllers.getAll);
 router.get('/:id', auth, saucesControllers.getOne);
 router.post('/',auth, multer, saucesControllers.createSauce);

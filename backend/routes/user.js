@@ -4,7 +4,7 @@ const router = express.Router();
 //Importation des controllers
 const userControl = require('../controllers/user');
 
-//Route lors de l'inscription
+//Création des routes vers l'API
 router.post('/signup', userControl.signup);
 router.post('/login', userControl.login);
 

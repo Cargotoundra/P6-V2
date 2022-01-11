@@ -6,12 +6,14 @@ const fs = require("fs");
 exports.createSauce = (req, res, next) => {
     //On transforme les données en objet JS
     const sauceObject = JSON.parse(req.body.sauce);
+    //On supprime l'ID crée par MONGO
     delete sauceObject._id;
     //Création d'une nouvelle sauce
     const newSauce = new sauce({
       ...sauceObject,
       //On récupère l'URL complète de l'image
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+      //On donne une valeur de création aux élèments suivants :
       likes: 0,
       dislikes: 0,
       usersLiked: [],
@@ -19,9 +21,11 @@ exports.createSauce = (req, res, next) => {
     });
     //Sauvegarde de la nouvelle sauce
     newSauce.save()
-    .then(() => res.status(201).json({ message: "sauce enregistré" }))
-    .catch((error) =>
-      res.status(400).json({ message: "Sauce non enregistré" })
+    .then(
+      () => res.status(201).json({ message: "sauce enregistré" })
+      )
+    .catch(
+      (error) => res.status(400).json({ error })
     );
   };
 
@@ -29,7 +33,7 @@ exports.getAll = (req, res, next) => {
     //On chercher TOUTES les sauces
     sauce.find()
     .then(
-      (allSauces) => { res.status(200).json(allSauces);}
+      (allSauces) => { res.status(200).json( allSauces );}
     )
     .catch(
       (error) => { res.status(400).json({ error });}
@@ -37,10 +41,10 @@ exports.getAll = (req, res, next) => {
   };
   
 exports.getOne = (req, res, next) => {
-    //On cherche un objet par son ID
+    //On cherche une sauce par son ID
     sauce.findOne({_id: req.params.id})
     .then(
-      (oneSauce) => { res.status(200).json(oneSauce);}
+      (oneSauce) => { res.status(200).json( oneSauce );}
     )
     .catch(
       (error) => {res.status(404).json({error});}
@@ -55,7 +59,7 @@ exports.modifySauce = (req, res, next) => {
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     } : { ...req.body };
     //Sinon MAJ
-    //updateOne vérifie que l'ID et l'ID de celui ayant rentré la sauce
+    //updateOne SI l'ID == l'ID de celui ayant rentré la sauce
     sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
     .then(
         () => res.status(200).json({ message: 'Modification effectuée !'})
@@ -90,7 +94,7 @@ exports.deleteSauce = (req, res, next) => {
         );
   };
   
-  exports.likeAndDislike = (req, res) => {
+exports.likeAndDislike = (req, res) => {
     //Si l'utilisateur aime la sauce alors on incrémente ($inc) et on inscrit l'userID dans le tableau usersLiked de la BD
     if (req.body.like === 1) {
       sauce.findOneAndUpdate(

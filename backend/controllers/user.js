@@ -1,13 +1,11 @@
 //importation du modèle user
 const User = require('../models/users');
 
-//importation du moduble bcrypt et jsonwebtoken
+//importation du moduble bcryptjs et jsonwebtoken
 const bcrypt = require('bcryptjs');
 const jsonWebToken = require('jsonwebtoken');
 //Permet d'accèder au fichier env
 require('dotenv').config();
-
-
 
 
 // fonction inscription d'un nouveau user
@@ -29,9 +27,13 @@ exports.signup = (req, res, next) => {
           .then(() =>
             res.status(201).json({ message: "Utilisateur créé dans la base de donnée." })
           )
-          .catch((error) => res.status(400).json({ error }));
+          .catch(
+            (error) => res.status(400).json({ error })
+            );
       })
-      .catch((error) => res.status(500).json({ error }));
+      .catch(
+        (error) => res.status(500).json({ error })
+        );
   };
 
 
@@ -49,9 +51,11 @@ exports.login = (req, res, next) => {
     //Si email connu on compare les données renseignés par l'utilisateur
     bcrypt.compare(req.body.password, user.password)
         .then(valid => {
+            //Si non ok alors erreur
             if (!valid) {
               return res.status(401).json({ message: 'Mauvaises adresse email ou mot de passe' });
             }
+            //Si non
             res.status(200).json(
             {
               userId: user._id,
@@ -63,7 +67,11 @@ exports.login = (req, res, next) => {
               )
             });
           })
-        .catch(error => res.status(500).json({ error }));
+        .catch(
+          (error) => res.status(500).json({ error })
+          );
     })
-        .catch(error => res.status(500).json({ error }));
+        .catch(
+          (error) => res.status(500).json({ error })
+          );
 };
