@@ -97,6 +97,7 @@ exports.deleteSauce = (req, res, next) => {
 exports.likeAndDislike = (req, res) => {
     //Si l'utilisateur aime la sauce alors on incrémente ($inc) et on inscrit l'userID dans le tableau usersLiked de la BD
     if (req.body.like === 1) {
+
       sauce.findOneAndUpdate(
         { _id: req.params.id },
         { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } }
