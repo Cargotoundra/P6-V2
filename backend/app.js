@@ -44,7 +44,7 @@ const createAccountLimiter = expressLimit({
   //15 min
   windowMs: 15 * 60 * 1000,
   //Nombre max de requete dans le temps au dessus
-  max: 5
+  max: 10
 });
 
 app.use(express.json());
@@ -52,7 +52,7 @@ app.use(express.json());
 //Rends le fichier images statiques
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/api/auth', userRoutes);
+app.use('/api/auth',createAccountLimiter, userRoutes);
 app.use('/api/sauces', sauceRoutes);
 
 module.exports = app ;
