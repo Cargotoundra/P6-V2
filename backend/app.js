@@ -35,7 +35,7 @@ const limitExpress = expressLimit({
   //30 min
   windowMs: 30 * 60 * 1000,
   //Nombre max de requetes
-  max: 20
+  max: 100
 });
 app.use(limitExpress);
 
