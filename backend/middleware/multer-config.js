@@ -1,4 +1,6 @@
+//Multer permet de gérer les fichiers entrants dans des requetes HTTP
 const multer = require("multer");
+
 //Permet de remplacer les .XXX des fichiers
 const MIME_TYPES = {
   "image/jpg": "jpg",
