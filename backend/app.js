@@ -5,12 +5,17 @@ const express = require('express');
 const app = express();
 const expressLimit = require('express-rate-limit');
 
-//Importation de Helmet pour protection OWASP
+//Importation de Helmet pour securiser les en têtes HTTP
 const helmet = require('helmet');
+
+//Importation de mongo sanitize pour empêcher l'injection d'opérateur MongoDB via les données user
+const sanitize = require("express-mongo-sanitize");
+
 const path = require('path');
 
 //Importation du fichier .env pour masque les accès à MongoDB
 require('dotenv').config();
+
 //Importation des routes
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
@@ -30,7 +35,7 @@ app.use((req, res, next) => {
     next();
   });
 
-//limiter le nombre de connexions possibles
+//limiter le nombre de requetes possibles
 const limitExpress = expressLimit({
   //30 min
   windowMs: 30 * 60 * 1000,
@@ -48,6 +53,7 @@ const createAccountLimiter = expressLimit({
 });
 
 app.use(express.json());
+app.use(sanitize());
 
 //Rends le fichier images statiques
 app.use('/images', express.static(path.join(__dirname, 'images')));
