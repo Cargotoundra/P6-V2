@@ -52,6 +52,13 @@ const createAccountLimiter = expressLimit({
   max: 10
 });
 
+//Mise en place helmet
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+
+//Supprime l'entete utilisé par Express
+//app.disable("x-powered-by")
+
 app.use(express.json());
 app.use(sanitize());
 
