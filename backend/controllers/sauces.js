@@ -95,6 +95,10 @@ exports.deleteSauce = (req, res, next) => {
   };
 
 function findAndSave (req, res, a,){
+  let totalLike = { likes: 1 };
+  let usersLiked = { usersLiked: req.body.userId }
+  let message = "Like ajouté avec succès !"
+  
   sauce.findOneAndUpdate(
     { _id: req.params.id },
     { $inc: { likes : a }, $push: { usersLiked : req.body.userId } }
@@ -110,8 +114,7 @@ function findAndSave (req, res, a,){
 exports.likeAndDislike = (req, res) => {
     //Si l'utilisateur aime la sauce alors on incrémente ($inc) et on inscrit l'userID dans le tableau usersLiked de la BD
     if (req.body.like === 1) {
-      findAndSave(req, res, 1,);
-      /*sauce.findOneAndUpdate(
+      sauce.findOneAndUpdate(
         { _id: req.params.id },
         { $inc: { likes: 1 }, $push: { usersLiked: req.body.userId } }
       )
@@ -120,7 +123,7 @@ exports.likeAndDislike = (req, res) => {
           )
         .catch(
           (error) => res.status(400).json({ error })
-          );*/
+          );
 
       //Idem si l'utilisateur n'aime pas la sauce
     } else if (req.body.like === -1) {
