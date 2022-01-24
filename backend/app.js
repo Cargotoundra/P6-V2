@@ -49,7 +49,7 @@ const createAccountLimiter = expressLimit({
   //15 min
   windowMs: 15 * 60 * 1000,
   //Nombre max de requete dans le temps au dessus
-  max: 10
+  max: 15
 });
 
 //Mise en place helmet
